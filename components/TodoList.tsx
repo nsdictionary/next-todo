@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 import { TodoType } from "../types/todo";
 import palette from "../styles/palette";
 import TrashCanIcon from "../public/static/svg/trash_can.svg";
 import CheckMarkIcon from "../public/static/svg/check_mark.svg";
+import { checkTodoAPI } from "../lib/api/todo";
 
 const Container = styled.div`
   width: 100%;
@@ -131,6 +133,9 @@ type ObjectIndexType = {
 };
 
 const TodoList: React.FC<IProps> = ({ todos }) => {
+  const router = useRouter();
+  const [localTodos, setLocalTodos] = useState<TodoType[]>(todos);
+
   //* 색깔 객체 구하기 1
   const getTodoColorNums = useCallback(() => {
     const colorNums = {
@@ -152,7 +157,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
   //* 색깔 객체 구하기 2 : 정해진 색상 이외의 색상도 허용
   const todoColorNums = useMemo(() => {
     const colors: ObjectIndexType = {};
-    todos.forEach((todo) => {
+    localTodos.forEach((todo) => {
       const value = colors[todo.color];
       if (!value) {
         colors[`${todo.color}`] = 1;
@@ -163,11 +168,36 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
     return colors;
   }, [todos]);
 
+  //* 투두 체크하기
+  const checkTodo = async (id: number) => {
+    try {
+      await checkTodoAPI(id);
+      console.log("check complete");
+
+      //* 1. 리프레시: 가장 비효율적
+      // await router.reload();
+
+      //* 2. 클라사이드 네비게이션: SSR로 데이터 갱신
+      // await router.push("/");
+
+      //* 3. useState 사용
+      const newTodos = localTodos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, checked: !todo.checked };
+        }
+        return todo;
+      });
+      setLocalTodos(newTodos);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Container>
       <div className="todo-list-header">
         <p className="todo-list-last-todo">
-          남은 TODO<span>{todos.length}개</span>
+          남은 TODO<span>{localTodos.length}개</span>
         </p>
         <div className="todo-list-header-colors">
           {Object.keys(todoColorNums).map((color, index) => (
@@ -179,7 +209,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
         </div>
       </div>
       <ul className="todo-list">
-        {todos.map((todo) => (
+        {localTodos.map((todo) => (
           <li className="todo-item" key={todo.id}>
             <div className="todo-left-side">
               <div className={`todo-color-block bg-${todo.color}`} />
@@ -197,7 +227,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
                   <TrashCanIcon className="todo-trash-can" onClick={() => {}} />
                   <CheckMarkIcon
                     className="todo-check-mark"
-                    onClick={() => {}}
+                    onClick={() => checkTodo(todo.id)}
                   />
                 </>
               )}
@@ -205,7 +235,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
                 <button
                   type="button"
                   className="todo-button"
-                  onClick={() => {}}
+                  onClick={() => checkTodo(todo.id)}
                 />
               )}
             </div>
