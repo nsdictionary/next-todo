@@ -7,7 +7,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import todo from "./todo";
 
 const rootReducer = combineReducers({
-  todo,
+  todo: todo.reducer,
 });
 
 const reducer = (state: any, action: any) => {
@@ -16,6 +16,7 @@ const reducer = (state: any, action: any) => {
       ...state, // use previous state
       ...action.payload, // apply delta from hydration
     };
+    if (state.count) nextState.count = state.count;
     return nextState;
   }
   return rootReducer(state, action);
