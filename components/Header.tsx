@@ -1,18 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import palette from "../styles/palette";
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 52px;
-  padding: 0 12px;
-  border-bottom: 1px solid ${palette.gray};
-  h1 {
-    font-size: 21px;
-  }
-`;
+const Container = styled.div.attrs({
+  className:
+    "flex border-b border-gray-200 border-solid text-2xl items-center w-full h-11 py-0 pl-3",
+})``;
 
 const Header: React.FC = () => {
   return (
