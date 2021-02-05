@@ -1,31 +1,9 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { useRouter } from "next/router";
-import palette from "../styles/palette";
 import BrushIcon from "../public/static/svg/brush.svg";
 import { TodoType } from "../types/todo";
 import { addTodoAPI } from "../lib/api/todo";
-
-const Container = styled.div`
-  .bg-blue {
-    background-color: ${palette.blue};
-  }
-  .bg-green {
-    background-color: ${palette.green};
-  }
-  .bg-navy {
-    background-color: ${palette.navy};
-  }
-  .bg-orange {
-    background-color: ${palette.orange};
-  }
-  .bg-red {
-    background-color: ${palette.red};
-  }
-  .bg-yellow {
-    background-color: ${palette.yellow};
-  }
-`;
+import { ColorDiv } from "../styles/GlobalStyle";
 
 const AddTodo: React.FC = () => {
   const [text, setText] = useState("");
@@ -40,8 +18,6 @@ const AddTodo: React.FC = () => {
         return;
       }
       await addTodoAPI({ text, color: selectedColor });
-      console.log("추가했습니다.");
-
       await router.push("/");
     } catch (e) {
       console.log(e);
@@ -49,7 +25,7 @@ const AddTodo: React.FC = () => {
   };
 
   return (
-    <Container className="p-3">
+    <ColorDiv className="p-3">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl">Add Todo</h1>
         <button
@@ -85,7 +61,7 @@ const AddTodo: React.FC = () => {
         onChange={(e) => setText(e.currentTarget.value)}
         placeholder="할 일을 입력해 주세요."
       />
-    </Container>
+    </ColorDiv>
   );
 };
 

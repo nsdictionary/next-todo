@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSideProps, NextPage } from "next";
-import TodoList from "../components/TodoList";
+import TodoList from "../components/TodoList/TodoList";
 import { TodoType } from "../types/todo";
 import { getTodosAPI } from "../lib/api/todo";
 import { wrapper } from "../store";
