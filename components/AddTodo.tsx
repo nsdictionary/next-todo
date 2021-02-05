@@ -30,7 +30,7 @@ const AddTodo: React.FC = () => {
         <h1 className="text-2xl">Add Todo</h1>
         <button
           type="button"
-          className="py-0.5 px-1 border border-solid border-black rounded-lg bg-white outline-none text-base"
+          className="py-0.5 px-1 border border-solid border-gray-300 rounded-lg bg-white shadow-inner outline-none text-base"
           onClick={addTodo}
         >
           추가하기
@@ -57,7 +57,7 @@ const AddTodo: React.FC = () => {
       </div>
       <textarea
         value={text}
-        className="text-lg w-full h-72 border border-gray-200 rounded-lg mt-3 resize-none outline-none p-3"
+        className="text-lg w-full h-72 border border-gray-200 rounded-lg mt-4 resize-none outline-none p-3"
         onChange={(e) => setText(e.currentTarget.value)}
         placeholder="할 일을 입력해 주세요."
       />
